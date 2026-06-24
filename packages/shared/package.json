@@ -1,0 +1,35 @@
+{
+    "name": "@dance-videos/shared",
+    "version": "1.0.0",
+    "private": true,
+    "license": "AGPL-3.0-only",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        },
+        "./branding": {
+            "types": "./dist/branding.d.ts",
+            "import": "./dist/branding.js"
+        }
+    },
+    "scripts": {
+        "generate": "node scripts/generate-types.mjs && node scripts/compile-validators.mjs",
+        "build": "npm run generate && tsc",
+        "check": "tsc --noEmit && eslint src/",
+        "test": "npm run generate && node --test test/validators.test.mjs"
+    },
+    "dependencies": {
+        "neverthrow": "^8.2.0"
+    },
+    "devDependencies": {
+        "ajv": "^8.20.0",
+        "ajv-formats": "^3.0.1",
+        "esbuild": "^0.28.0",
+        "typescript": "~5.9.3",
+        "yaml": "^2.9.0"
+    }
+}

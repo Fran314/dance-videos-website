@@ -1,0 +1,671 @@
+openapi: 3.1.0
+info:
+  title: Dance Videos Website API
+  version: 1.0.0
+paths:
+  /login:
+    post:
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginBody'
+      responses:
+        '200':
+          description: Login successful
+        '400':
+          description: Invalid request
+        '401':
+          description: Invalid credentials
+  /logout:
+    post:
+      operationId: logout
+      responses:
+        '200':
+          description: Logout successful
+  /users:
+    get:
+      operationId: getUsers
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+        '401':
+          description: Unauthorized
+  /users/self:
+    get:
+      operationId: getSelf
+      responses:
+        '200':
+          description: Current user info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SelfUser'
+        '401':
+          description: Unauthorized
+  /users/{username}/add:
+    post:
+      operationId: addUser
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            $ref: '#/components/schemas/NonEmptySafeStr'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddUserBody'
+      responses:
+        '200':
+          description: User added
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized
+  /users/{username}/delete:
+    post:
+      operationId: deleteUser
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            $ref: '#/components/schemas/NonEmptySafeStr'
+      responses:
+        '200':
+          description: User deleted
+        '401':
+          description: Unauthorized
+        '404':
+          description: User not found
+  /users/{username}/update:
+    post:
+      operationId: updateUser
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            $ref: '#/components/schemas/NonEmptySafeStr'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddUserBody'
+      responses:
+        '200':
+          description: User updated
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized
+        '404':
+          description: User not found
+  /courses:
+    get:
+      operationId: getCourses
+      responses:
+        '200':
+          description: List of courses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Courses'
+        '401':
+          description: Unauthorized
+  /courses/add:
+    post:
+      operationId: addCourse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddCourseBody'
+      responses:
+        '200':
+          description: Course added
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized
+  /courses/{courseId}:
+    get:
+      operationId: getCourse
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: Course details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Course not found
+  /courses/{courseId}/delete:
+    post:
+      operationId: deleteCourse
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: Course deleted
+        '401':
+          description: Unauthorized
+        '404':
+          description: Course not found
+  /courses/{courseId}/update:
+    post:
+      operationId: updateCourse
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddCourseBody'
+      responses:
+        '200':
+          description: Course updated
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Course not found
+  /courses/{courseId}/videos/add:
+    post:
+      operationId: addVideo
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddVideoBody'
+      responses:
+        '200':
+          description: Video added
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Course not found
+  /courses/{courseId}/videos/{videoId}:
+    get:
+      operationId: streamVideo
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+        - in: path
+          name: videoId
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: Video stream
+          content:
+            video/*:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: Unauthorized
+        '404':
+          description: Video not found
+  /courses/{courseId}/videos/{videoId}/delete:
+    post:
+      operationId: deleteVideo
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+        - in: path
+          name: videoId
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: Video deleted
+        '401':
+          description: Unauthorized
+        '404':
+          description: Video not found
+  /courses/{courseId}/videos/{videoId}/thumbnail:
+    get:
+      operationId: getVideoThumbnail
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+        - in: path
+          name: videoId
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: Video thumbnail
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: Unauthorized
+        '404':
+          description: Video not found
+  /courses/{courseId}/videos/{videoId}/update:
+    post:
+      operationId: updateVideo
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+        - in: path
+          name: videoId
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVideoBody'
+      responses:
+        '200':
+          description: Video updated
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Video not found
+  /file-upload/{hash}/init:
+    post:
+      operationId: initUpload
+      parameters:
+        - in: path
+          name: hash
+          required: true
+          schema:
+            $ref: '#/components/schemas/Hash'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitUploadBody'
+      responses:
+        '200':
+          description: Upload initialized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitUploadResponse'
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized
+  /file-upload/{hash}/finalize:
+    post:
+      operationId: finalizeUpload
+      parameters:
+        - in: path
+          name: hash
+          required: true
+          schema:
+            $ref: '#/components/schemas/Hash'
+      responses:
+        '200':
+          description: Upload finalized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinalizeUploadResponse'
+        '401':
+          description: Unauthorized
+  /file-upload/{hash}/{idx}:
+    post:
+      operationId: uploadChunk
+      parameters:
+        - in: path
+          name: hash
+          required: true
+          schema:
+            $ref: '#/components/schemas/Hash'
+        - in: path
+          name: idx
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: Chunk uploaded
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized
+components:
+  schemas:
+    # --- Branded primitives ---
+    # Custom x- markers used below:
+    #   x-brand: emits a unique branded string type instead of a plain string
+    #   x-protoExclude: reject values that are keys of Object.prototype ('constructor', '__proto__', ...). Not expressible in JSON Schema.
+    #   x-yearModular: require the second pair to be the first pair plus one, mod
+    #     100 (e.g. '24/25', '99/00'). Not expressible in JSON Schema.
+    Id:
+      type: string
+      pattern: '^[0-9a-f]{8}$'
+      x-brand: true
+    Token:
+      type: string
+      pattern: '^[0-9a-f]{64}$'
+      x-brand: true
+    Hash:
+      type: string
+      pattern: '^[0-9a-f]{16}$'
+      x-brand: true
+    SafeStr:
+      type: string
+      maxLength: 255
+      x-protoExclude: true
+      x-brand: true
+    NonEmptySafeStr:
+      type: string
+      minLength: 1
+      maxLength: 255
+      x-protoExclude: true
+      x-brand: true
+    YearStr:
+      type: string
+      pattern: '^\d\d/\d\d$'
+      x-yearModular: true
+      x-brand: true
+    DateStr:
+      type: string
+      pattern: '^\d{4}-\d{2}-\d{2}$'
+      x-brand: true
+    # --- Domain schemas ---
+    User:
+      type: object
+      required:
+        - password
+        - admin
+        - courses
+      properties:
+        password:
+          $ref: '#/components/schemas/NonEmptySafeStr'
+        admin:
+          type: boolean
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Id'
+    Users:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/User'
+      propertyNames:
+        $ref: '#/components/schemas/NonEmptySafeStr'
+    PublicUser:
+      type: object
+      required:
+        - admin
+        - courses
+      properties:
+        admin:
+          type: boolean
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Id'
+    Video:
+      type: object
+      required:
+        - date
+        - label
+        - uploadTimestamp
+        - status
+        - conversionProgress
+        - originalCodec
+        - convertedCodec
+      properties:
+        date:
+          $ref: '#/components/schemas/DateStr'
+        label:
+          $ref: '#/components/schemas/SafeStr'
+        uploadTimestamp:
+          type: number
+        status:
+          type: string
+          enum:
+            - locking
+            - queued
+            - converting
+            - converted
+            - error
+        conversionProgress:
+          type: number
+        originalCodec:
+          type: string
+        convertedCodec:
+          type: string
+    CourseSummary:
+      type: object
+      required:
+        - displayName
+        - year
+      properties:
+        displayName:
+          $ref: '#/components/schemas/NonEmptySafeStr'
+        year:
+          $ref: '#/components/schemas/YearStr'
+    Course:
+      allOf:
+        - $ref: '#/components/schemas/CourseSummary'
+        - type: object
+          required:
+            - videos
+          properties:
+            videos:
+              type: object
+              additionalProperties:
+                $ref: '#/components/schemas/Video'
+              propertyNames:
+                $ref: '#/components/schemas/Id'
+    Courses:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Course'
+      propertyNames:
+        $ref: '#/components/schemas/Id'
+    SelfUser:
+      type: object
+      required:
+        - username
+        - admin
+        - courses
+      properties:
+        username:
+          $ref: '#/components/schemas/NonEmptySafeStr'
+        admin:
+          type: boolean
+        courses:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CourseSummary'
+          propertyNames:
+            $ref: '#/components/schemas/Id'
+    # --- Named param schemas (for generated parsers) ---
+    AddUserParams:
+      type: object
+      required:
+        - username
+      properties:
+        username:
+          $ref: '#/components/schemas/NonEmptySafeStr'
+    CourseIdParams:
+      type: object
+      required:
+        - courseId
+      properties:
+        courseId:
+          $ref: '#/components/schemas/Id'
+    CourseVideoParams:
+      type: object
+      required:
+        - courseId
+        - videoId
+      properties:
+        courseId:
+          $ref: '#/components/schemas/Id'
+        videoId:
+          $ref: '#/components/schemas/Id'
+    HashParams:
+      type: object
+      required:
+        - hash
+      properties:
+        hash:
+          $ref: '#/components/schemas/Hash'
+    UploadChunkParams:
+      type: object
+      required:
+        - hash
+        - idx
+      properties:
+        hash:
+          $ref: '#/components/schemas/Hash'
+        idx:
+          type: string
+    # --- Request body schemas ---
+    LoginBody:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          $ref: '#/components/schemas/NonEmptySafeStr'
+        password:
+          $ref: '#/components/schemas/NonEmptySafeStr'
+    AddUserBody:
+      type: object
+      required:
+        - password
+        - admin
+        - courses
+      properties:
+        password:
+          $ref: '#/components/schemas/NonEmptySafeStr'
+        admin:
+          type: boolean
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Id'
+    AddCourseBody:
+      type: object
+      required:
+        - displayName
+        - year
+      properties:
+        displayName:
+          $ref: '#/components/schemas/NonEmptySafeStr'
+        year:
+          $ref: '#/components/schemas/YearStr'
+    AddVideoBody:
+      type: object
+      required:
+        - date
+        - label
+        - file
+      properties:
+        date:
+          $ref: '#/components/schemas/DateStr'
+        label:
+          $ref: '#/components/schemas/SafeStr'
+        file:
+          $ref: '#/components/schemas/Token'
+    UpdateVideoBody:
+      type: object
+      required:
+        - date
+        - label
+      properties:
+        date:
+          $ref: '#/components/schemas/DateStr'
+        label:
+          $ref: '#/components/schemas/SafeStr'
+    InitUploadBody:
+      type: object
+      required:
+        - size
+      properties:
+        size:
+          type: integer
+          minimum: 1
+    # --- Response schemas ---
+    InitUploadResponse:
+      type: array
+      items:
+        type: integer
+    FinalizeUploadResponse:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          $ref: '#/components/schemas/Token'

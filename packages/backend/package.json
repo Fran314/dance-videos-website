@@ -1,0 +1,32 @@
+{
+    "name": "@dance-videos/backend",
+    "version": "1.0.0",
+    "private": true,
+    "license": "AGPL-3.0-only",
+    "type": "module",
+    "scripts": {
+        "dev": "tsx watch src/index.ts",
+        "build": "tsc",
+        "check": "tsc --noEmit && eslint src/",
+        "lint": "eslint src/"
+    },
+    "dependencies": {
+        "cookie-parser": "^1.4.7",
+        "express": "^5.1.0",
+        "express-rate-limit": "^8.0.1",
+        "mp4box": "^1.4.5",
+        "multer": "^2.0.2",
+        "winston": "^3.17.0",
+        "neverthrow": "^8.2.0",
+        "winston-daily-rotate-file": "^5.0.0"
+    },
+    "devDependencies": {
+        "@dance-videos/shared": "*",
+        "@types/cookie-parser": "^1.4.10",
+        "@types/express": "^5.0.6",
+        "@types/multer": "^1.4.12",
+        "@types/node": "^22.20.0",
+        "tsx": "^4.19.0",
+        "typescript": "~5.9.3"
+    }
+}

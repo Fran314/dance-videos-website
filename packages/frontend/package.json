@@ -1,0 +1,32 @@
+{
+    "name": "@dance-videos/frontend",
+    "version": "1.0.0",
+    "private": true,
+    "license": "AGPL-3.0-only",
+    "type": "module",
+    "scripts": {
+        "dev": "vite --host --port 8080",
+        "build": "vue-tsc --build && vite build",
+        "preview": "vite preview",
+        "check": "vue-tsc --noEmit --project tsconfig.app.json && eslint src/"
+    },
+    "dependencies": {
+        "@dance-videos/shared": "*",
+        "neverthrow": "^8.2.0",
+        "pinia": "^3.0.3",
+        "vue": "^3.5.18",
+        "vue-router": "^4.5.1"
+    },
+    "devDependencies": {
+        "@tsconfig/node22": "^22.0.5",
+        "@types/node": "^22.20.0",
+        "@vitejs/plugin-vue": "^6.0.1",
+        "@vue/tsconfig": "^0.8.1",
+        "sass": "^1.92.1",
+        "typescript": "~5.9.3",
+        "vite": "^7.1.6",
+        "vite-plugin-pwa": "^1.0.3",
+        "vite-plugin-vue-devtools": "^8.0.2",
+        "vue-tsc": "^3.2.2"
+    }
+}

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" href="/branding/icon.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="color-scheme" content="light" />
+
+        <meta name="robots" content="noindex" />
+
+        <meta name="description" content="{{APP_DESCRIPTION}}" />
+        <title>{{APP_TITLE}}</title>
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="{{APP_TITLE}}" />
+        <meta name="twitter:description" content="{{APP_DESCRIPTION}}" />
+        <meta
+            name="twitter:image"
+            content="https://{{APP_DOMAIN}}/branding/og-image.png"
+        />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="{{APP_TITLE}}" />
+        <meta property="og:description" content="{{APP_DESCRIPTION}}" />
+        <meta property="og:url" content="https://{{APP_DOMAIN}}" />
+        <meta
+            property="og:image"
+            content="https://{{APP_DOMAIN}}/branding/og-image.png"
+        />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <style>{{APP_THEME_CSS}}</style>
+    </head>
+
+    <body>
+        <div id="app"></div>
+        <script type="module" src="/src/main.ts"></script>
+    </body>
+</html>
