@@ -40,29 +40,33 @@ deploy site:
         echo "deploy: missing $envfile" >&2
         exit 1
     fi
+    if [[ ! -f "sites/$site/compose.yaml" ]]; then
+        echo "deploy: missing sites/$site/compose.yaml" >&2
+        exit 1
+    fi
     set -a; source "$envfile"; set +a
 
     ENDPOINT="${DEPLOY_USER:?deploy: set DEPLOY_USER in $envfile}@${DEPLOY_HOST:?deploy: set DEPLOY_HOST in $envfile}"
     DOMAIN="${DEPLOY_DOMAIN:?deploy: set DEPLOY_DOMAIN in $envfile}"
 
-    IMAGE_SRC="src/$DOMAIN"
-    DATA_SRC="/srv/$DOMAIN"
+    IMAGE_SRC="src/dance-videos"
 
-    ssh "$ENDPOINT" "mkdir -p $IMAGE_SRC"
+    ssh "$ENDPOINT" "mkdir -p $IMAGE_SRC $DOMAIN"
     rsync -azh --delete \
         --exclude='.git' --exclude='node_modules' --exclude='dist' \
         --exclude='data' --exclude='storage' --exclude='temp' --exclude='logs' \
         --exclude='.env' --exclude='.env.*' --exclude='/sites' \
         ./ "$ENDPOINT:$IMAGE_SRC/"
 
+    rsync -azh "sites/$site/compose.yaml" "$ENDPOINT:$DOMAIN/compose.yaml"
     if  [[ -d "sites/$site/branding" ]]; then
-        ssh "$ENDPOINT" "mkdir -p /srv/$DOMAIN/branding"
-        rsync -azh --delete "sites/$site/branding/" "$ENDPOINT:$DATA_SRC/branding/"
+        ssh "$ENDPOINT" "mkdir -p $DOMAIN/branding"
+        rsync -azh --delete "sites/$site/branding/" "$ENDPOINT:$DOMAIN/branding/"
     fi
 
-    ssh "$ENDPOINT" "podman build -t localhost/$DOMAIN:latest $IMAGE_SRC"
+    ssh "$ENDPOINT" "docker build -t dance-videos:latest $IMAGE_SRC"
 
-    ssh "$ENDPOINT" "systemctl --user daemon-reload && systemctl --user restart $DOMAIN"
+    ssh "$ENDPOINT" "cd $DOMAIN && docker compose up -d"
 
 # Preview a site's fully-branded app locally
 preview site:

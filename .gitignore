@@ -20,3 +20,4 @@ packages/shared/src/generated
 sites/*
 !sites/example
 !sites/example/.env.deploy
+!sites/example/compose.yaml

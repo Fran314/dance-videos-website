@@ -24,6 +24,7 @@ docker build -t dance-videos .
 docker run -d --name dance-videos -p 3000:3000 \
   -v ./data:/data \
   -v ./storage:/storage \
+  -v ./temp:/temp \
   -v ./logs:/logs \
   dance-videos
 ```
@@ -37,6 +38,8 @@ The mounted volumes are:
   thumbnails
 - `/storage`, which is the storage designated for the video files (if available,
   it's suggested to mount `/data` on fast memory and `/storage` on bulk storage)
+- `/temp`, which keeps uploads in progress and the scratch files of the video
+  conversion
 - `/logs`, which as the name implies keeps the logs
 
 During the first boot (or any time `/data` is missing the `users.json` file),
@@ -52,12 +55,29 @@ It is strongly suggested to change this password during the first login.
 The spawned instance can be further personalized by mounting an additional
 volume `/branding`, see [Customization](#customization).
 
-#### On NixOS
+#### With `just deploy`
 
-There exist an [example nix module](./nixos/example.nix) which can be used to
-deploy this service on a NixOS machine. The module is made to be compatible with
-the `just deploy <site>` commands from the [justfile](./justfile). The instance
-is run as a `podman` container.
+`just deploy <site>` deploys a site to a remote machine over SSH. It needs:
+
+- `sites/<site>/.env.deploy`, with the SSH user and host and the site's domain
+- `sites/<site>/compose.yaml`, the compose file of the site
+- optionally `sites/<site>/branding/`
+
+See [`sites/example/`](./sites/example/) as a reference. On the remote machine,
+the command syncs the repository to `~/src/dance-videos` and builds the image
+`dance-videos:latest` from it. It then copies the compose file and the branding
+to `~/<domain>` and runs `docker compose up -d` there. The data volumes of the
+example compose file are folders inside `~/<domain>`.
+
+All sites on the same machine share the same image. Deploying one site rebuilds
+the image for all of them, and the other sites switch to it the next time their
+container is recreated.
+
+The remote machine needs rootless Docker running for the SSH user. On NixOS,
+this means `virtualisation.docker.rootless.enable = true` and
+`users.users.<user>.linger = true`, so that the containers start at boot without
+a login. The [example nix module](./nixos/example.nix) shows the Caddy reverse
+proxy in front of a site.
 
 ### Development
 

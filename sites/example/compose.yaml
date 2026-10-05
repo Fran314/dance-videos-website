@@ -1,0 +1,15 @@
+services:
+  app:
+    image: dance-videos:latest
+    # The image is built locally by `just deploy`. Without this, compose would try to pull `latest` from Docker Hub.
+    pull_policy: never
+    restart: unless-stopped
+    stop_grace_period: 15s
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./data:/data
+      - ./storage:/storage
+      - ./temp:/temp
+      - ./logs:/logs
+      - ./branding:/branding:ro
